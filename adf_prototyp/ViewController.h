@@ -28,7 +28,9 @@
 //BUTTONS
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *btn_gck_deviceScanner;
 
+@property (weak, nonatomic) IBOutlet UILabel *availableDevicesLabel;
 @property (weak, nonatomic) IBOutlet UILabel *connectedToLabel;
+
 @property (weak, nonatomic) IBOutlet UITextField *mesage_textfield;
 @property (weak, nonatomic) IBOutlet UIButton *message_send;
 

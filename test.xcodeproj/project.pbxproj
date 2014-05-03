@@ -51,14 +51,14 @@
 		26B1ABFA1913EABC00D6F045 /* GoogleCast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleCast.framework; sourceTree = "<group>"; };
 		26B1ABFD19141F3F00D6F045 /* MessageChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageChannel.h; sourceTree = "<group>"; };
 		26B1ABFE19141F3F00D6F045 /* MessageChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageChannel.m; sourceTree = "<group>"; };
-		973FB7711913B4E400C4CD6E /* adf_prototyp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = adf_prototyp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		973FB7711913B4E400C4CD6E /* test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		973FB7741913B4E400C4CD6E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		973FB7761913B4E500C4CD6E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		973FB7781913B4E500C4CD6E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		973FB77C1913B4E500C4CD6E /* adf_prototyp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "adf_prototyp-Info.plist"; sourceTree = "<group>"; };
+		973FB77C1913B4E500C4CD6E /* test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "test-Info.plist"; sourceTree = "<group>"; };
 		973FB77E1913B4E500C4CD6E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		973FB7801913B4E500C4CD6E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		973FB7821913B4E500C4CD6E /* adf_prototyp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "adf_prototyp-Prefix.pch"; sourceTree = "<group>"; };
+		973FB7821913B4E500C4CD6E /* test-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "test-Prefix.pch"; sourceTree = "<group>"; };
 		973FB7831913B4E500C4CD6E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		973FB7841913B4E500C4CD6E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		973FB7871913B4E500C4CD6E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
@@ -66,9 +66,9 @@
 		973FB78C1913B4E500C4CD6E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../ViewController.h; sourceTree = "<group>"; };
 		973FB78D1913B4E500C4CD6E /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = ../ViewController.m; sourceTree = "<group>"; };
 		973FB78F1913B4E500C4CD6E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		973FB7951913B4E500C4CD6E /* adf_prototypTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = adf_prototypTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		973FB7951913B4E500C4CD6E /* testTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = testTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		973FB7961913B4E500C4CD6E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		973FB79E1913B4E500C4CD6E /* adf_prototypTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "adf_prototypTests-Info.plist"; sourceTree = "<group>"; };
+		973FB79E1913B4E500C4CD6E /* testTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "testTests-Info.plist"; sourceTree = "<group>"; };
 		973FB7A01913B4E500C4CD6E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		973FB7A21913B4E500C4CD6E /* adf_prototypTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = adf_prototypTests.m; sourceTree = "<group>"; };
 		973FB7B21913B70F00C4CD6E /* cast_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cast_off.png; sourceTree = "<group>"; };
@@ -132,8 +132,8 @@
 		973FB7721913B4E400C4CD6E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				973FB7711913B4E400C4CD6E /* adf_prototyp.app */,
-				973FB7951913B4E500C4CD6E /* adf_prototypTests.xctest */,
+				973FB7711913B4E400C4CD6E /* test.app */,
+				973FB7951913B4E500C4CD6E /* testTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -168,10 +168,10 @@
 		973FB77B1913B4E500C4CD6E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				973FB77C1913B4E500C4CD6E /* adf_prototyp-Info.plist */,
+				973FB77C1913B4E500C4CD6E /* test-Info.plist */,
 				973FB77D1913B4E500C4CD6E /* InfoPlist.strings */,
 				973FB7801913B4E500C4CD6E /* main.m */,
-				973FB7821913B4E500C4CD6E /* adf_prototyp-Prefix.pch */,
+				973FB7821913B4E500C4CD6E /* test-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -188,7 +188,7 @@
 		973FB79D1913B4E500C4CD6E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				973FB79E1913B4E500C4CD6E /* adf_prototypTests-Info.plist */,
+				973FB79E1913B4E500C4CD6E /* testTests-Info.plist */,
 				973FB79F1913B4E500C4CD6E /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -307,9 +307,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		973FB7701913B4E400C4CD6E /* adf_prototyp */ = {
+		973FB7701913B4E400C4CD6E /* test */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 973FB7A61913B4E500C4CD6E /* Build configuration list for PBXNativeTarget "adf_prototyp" */;
+			buildConfigurationList = 973FB7A61913B4E500C4CD6E /* Build configuration list for PBXNativeTarget "test" */;
 			buildPhases = (
 				973FB76D1913B4E400C4CD6E /* Sources */,
 				973FB76E1913B4E400C4CD6E /* Frameworks */,
@@ -319,14 +319,14 @@
 			);
 			dependencies = (
 			);
-			name = adf_prototyp;
+			name = test;
 			productName = adf_prototyp;
-			productReference = 973FB7711913B4E400C4CD6E /* adf_prototyp.app */;
+			productReference = 973FB7711913B4E400C4CD6E /* test.app */;
 			productType = "com.apple.product-type.application";
 		};
-		973FB7941913B4E500C4CD6E /* adf_prototypTests */ = {
+		973FB7941913B4E500C4CD6E /* testTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 973FB7A91913B4E500C4CD6E /* Build configuration list for PBXNativeTarget "adf_prototypTests" */;
+			buildConfigurationList = 973FB7A91913B4E500C4CD6E /* Build configuration list for PBXNativeTarget "testTests" */;
 			buildPhases = (
 				973FB7911913B4E500C4CD6E /* Sources */,
 				973FB7921913B4E500C4CD6E /* Frameworks */,
@@ -337,9 +337,9 @@
 			dependencies = (
 				973FB79B1913B4E500C4CD6E /* PBXTargetDependency */,
 			);
-			name = adf_prototypTests;
+			name = testTests;
 			productName = adf_prototypTests;
-			productReference = 973FB7951913B4E500C4CD6E /* adf_prototypTests.xctest */;
+			productReference = 973FB7951913B4E500C4CD6E /* testTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -356,7 +356,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 973FB76C1913B4E400C4CD6E /* Build configuration list for PBXProject "adf_prototyp" */;
+			buildConfigurationList = 973FB76C1913B4E400C4CD6E /* Build configuration list for PBXProject "test" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -369,8 +369,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				973FB7701913B4E400C4CD6E /* adf_prototyp */,
-				973FB7941913B4E500C4CD6E /* adf_prototypTests */,
+				973FB7701913B4E400C4CD6E /* test */,
+				973FB7941913B4E500C4CD6E /* testTests */,
 			);
 		};
 /* End PBXProject section */
@@ -432,7 +432,7 @@
 /* Begin PBXTargetDependency section */
 		973FB79B1913B4E500C4CD6E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 973FB7701913B4E400C4CD6E /* adf_prototyp */;
+			target = 973FB7701913B4E400C4CD6E /* test */;
 			targetProxy = 973FB79A1913B4E500C4CD6E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -558,10 +558,10 @@
 					"$(PROJECT_DIR)/adf_prototyp/ressources/frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "adf_prototyp/adf_prototyp-Prefix.pch";
-				INFOPLIST_FILE = "adf_prototyp/adf_prototyp-Info.plist";
+				GCC_PREFIX_HEADER = "adf_prototyp/test-Prefix.pch";
+				INFOPLIST_FILE = "adf_prototyp/test-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = test;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -577,10 +577,10 @@
 					"$(PROJECT_DIR)/adf_prototyp/ressources/frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "adf_prototyp/adf_prototyp-Prefix.pch";
-				INFOPLIST_FILE = "adf_prototyp/adf_prototyp-Info.plist";
+				GCC_PREFIX_HEADER = "adf_prototyp/test-Prefix.pch";
+				INFOPLIST_FILE = "adf_prototyp/test-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = test;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -601,8 +601,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "adf_prototypTests/adf_prototypTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "adf_prototypTests/testTests-Info.plist";
+				PRODUCT_NAME = testTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -620,8 +620,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "adf_prototyp/adf_prototyp-Prefix.pch";
-				INFOPLIST_FILE = "adf_prototypTests/adf_prototypTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "adf_prototypTests/testTests-Info.plist";
+				PRODUCT_NAME = testTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -630,7 +630,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		973FB76C1913B4E400C4CD6E /* Build configuration list for PBXProject "adf_prototyp" */ = {
+		973FB76C1913B4E400C4CD6E /* Build configuration list for PBXProject "test" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				973FB7A41913B4E500C4CD6E /* Debug */,
@@ -639,7 +639,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		973FB7A61913B4E500C4CD6E /* Build configuration list for PBXNativeTarget "adf_prototyp" */ = {
+		973FB7A61913B4E500C4CD6E /* Build configuration list for PBXNativeTarget "test" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				973FB7A71913B4E500C4CD6E /* Debug */,
@@ -648,7 +648,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		973FB7A91913B4E500C4CD6E /* Build configuration list for PBXNativeTarget "adf_prototypTests" */ = {
+		973FB7A91913B4E500C4CD6E /* Build configuration list for PBXNativeTarget "testTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				973FB7AA1913B4E500C4CD6E /* Debug */,

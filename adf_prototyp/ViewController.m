@@ -21,7 +21,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 @synthesize gck_devices, mainBundleInfo;
 
-@synthesize btn_gck_deviceScanner, mesage_textfield, message_send, connectedToLabel;
+@synthesize btn_gck_deviceScanner, mesage_textfield, message_send, connectedToLabel, availableDevicesLabel;
 
 - (void)viewDidLoad
 {
@@ -51,19 +51,23 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 - (void)deviceDidComeOnline:(GCKDevice *)device {
   NSLog(@"defice appear!!!");
-  [self updateButtonStates];
+  //[self updateConnectionStates];
+  
+  [self.availableDevicesLabel setText:[NSString stringWithFormat:@"Available devices: %lu", (unsigned long)[self.gck_deviceScanner.devices count]]];
 }
 
 - (void)deviceDidGoOffline:(GCKDevice *)device {
   NSLog(@"device disappeared!!!");
-  [self updateButtonStates];
+  //[self updateConnectionStates];
+  
+  [self.availableDevicesLabel setText:[NSString stringWithFormat:@"Available devices: %lu", (unsigned long)[self.gck_deviceScanner.devices count]]];
 }
 
 #pragma mark - GCKDeviceManagerDelegate
 
 - (void)deviceManagerDidConnect:(GCKDeviceManager *)deviceManager {
   NSLog(@"connected!!");
-  [self updateButtonStates];
+  [self updateConnectionStates];
   
   [self.gck_deviceManager launchApplication:kReceiverAppID];
 }
@@ -71,26 +75,25 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager didConnectToCastApplication:(GCKApplicationMetadata *)applicationMetadata sessionID:(NSString *)sessionID launchedApplication:(BOOL)launchedApplication {
   NSLog(@"did connect");
-  NSLog(@"application has launched %hhd", launchedApplication);
   
-  self.messageChannel = [[MessageChannel alloc] initWithNamespace:@"urn:x-cast:de.adf.adf-prototyp"];
+  self.messageChannel = [[MessageChannel alloc] initWithNamespace:@"urn:x-cast:de.adf.test"];
   [self.gck_deviceManager addChannel:self.messageChannel];
 }
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager didFailToConnectToApplicationWithError:(NSError *)error {
-  NSLog(@"didFailToConnectToApplicationWithError: %@", error);
+  NSLog(@"didFailToConnectToApplicationWithError");
   [self showError:error];
   
   [self deviceDisconnected];
-  [self updateButtonStates];
+  [self updateConnectionStates];
 }
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager didFailToConnectWithError:(GCKError *)error {
-  NSLog(@"didFailToConnectWithError: %@", error);
+  NSLog(@"didFailToConnectWithError");
   [self showError:error];
   
   [self deviceDisconnected];
-  [self updateButtonStates];
+  [self updateConnectionStates];
 }
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager didDisconnectWithError:(GCKError *)error {
@@ -101,7 +104,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
   }
   
   [self deviceDisconnected];
-  [self updateButtonStates];
+  [self updateConnectionStates];
   
 }
 
@@ -109,16 +112,6 @@ static NSString *const kReceiverAppID = @"5A71905F";
   self.gck_applicationMetadata = applicationMetadata;
   
   NSLog(@"Received device status: %@", applicationMetadata);
-}
-
-#pragma mark - misc
-- (void)showError:(NSError *)error {
-  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil)
-                                                  message:NSLocalizedString(error.description, nil)
-                                                 delegate:nil
-                                        cancelButtonTitle:NSLocalizedString(@"OK", nil)
-                                        otherButtonTitles:nil];
-  [alert show];
 }
 
 #pragma mark - UIButtonActions
@@ -161,6 +154,8 @@ static NSString *const kReceiverAppID = @"5A71905F";
     deviceListActonSheet.destructiveButtonIndex = 0;
     deviceListActonSheet.cancelButtonIndex = 1;
     
+    [deviceListActonSheet setTag:100];
+    
     [deviceListActonSheet showInView:self.view];
   }
 }
@@ -183,7 +178,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
         [self.gck_deviceManager disconnect];
         
         [self deviceDisconnected];
-        [self updateButtonStates];
+        [self updateConnectionStates];
       }
     }
   }
@@ -201,6 +196,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
   }
   
   self.gck_deviceManager = [[GCKDeviceManager alloc] initWithDevice:device clientPackageName:[self.mainBundleInfo objectForKey:@"CFBundleIdentifier"]];
+  
   [self.gck_deviceManager setDelegate:self];
   [self.gck_deviceManager connect];
 }
@@ -218,21 +214,15 @@ static NSString *const kReceiverAppID = @"5A71905F";
   return YES;
 }
 
-- (void)updateButtonStates {
-  if(self.gck_deviceScanner.devices.count == 0) {
-    //Hide the cast button
+- (void)updateConnectionStates {
+  if(self.gck_deviceManager && [self isConnected]) {
+    //Enabled state for cast button
+    [self.connectedToLabel setText:[NSString stringWithFormat:@"Connected to: %@", self.gck_selectedDevice.friendlyName]];
+    [self.btn_gck_deviceScanner setImage:[UIImage imageNamed:@"cast_on.png"]];
+  } else {
+    //Disabled state for cast button
     [self.connectedToLabel setText:@"Connected to: ..."];
     [self.btn_gck_deviceScanner setImage:[UIImage imageNamed:@"cast_off.png"]];
-  } else {
-    if (self.gck_deviceManager && self.gck_deviceManager.isConnected) {
-      //Enabled state for cast button
-      [self.connectedToLabel setText:[NSString stringWithFormat:@"Connected to: %@", self.gck_selectedDevice.friendlyName]];
-      [self.btn_gck_deviceScanner setImage:[UIImage imageNamed:@"cast_on.png"]];
-    } else {
-      //Disabled state for cast button
-      [self.connectedToLabel setText:@"Connected to: ..."];
-      [self.btn_gck_deviceScanner setImage:[UIImage imageNamed:@"cast_off.png"]];
-    }
   }
 }
 
@@ -240,7 +230,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
   NSLog(@"sending text %@", [self.mesage_textfield text]);
   
   //Show alert if not connected
-  if (!self.gck_deviceManager || !self.gck_deviceManager.isConnected) {
+  if (!self.gck_deviceManager || ![self isConnected]) {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not Connected", nil)
                                                     message:NSLocalizedString(@"Please connect to Cast device", nil)
                                                    delegate:nil
@@ -252,6 +242,17 @@ static NSString *const kReceiverAppID = @"5A71905F";
   }
   
   [self.messageChannel sendTextMessage:[self.mesage_textfield text]];
+}
+
+#pragma mark - MISC
+
+- (void)showError:(NSError *)error {
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil)
+                                                  message:NSLocalizedString(error.description, nil)
+                                                 delegate:nil
+                                        cancelButtonTitle:NSLocalizedString(@"OK", nil)
+                                        otherButtonTitles:nil];
+  [alert show];
 }
 
 @end
