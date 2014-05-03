@@ -16,8 +16,12 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 @implementation ViewController
 
-@synthesize gck_applicationMetadata, gck_deviceScanner, gck_deviceManager, gck_devices, gck_selectedDevice, mainBundleInfo;
-@synthesize btn_gck_deviceScanner, mesage_textfield, message_send;
+@synthesize gck_applicationMetadata, gck_deviceScanner, gck_deviceManager, gck_selectedDevice;
+@synthesize messageChannel;
+
+@synthesize gck_devices, mainBundleInfo;
+
+@synthesize btn_gck_deviceScanner, mesage_textfield, message_send, connectedToLabel;
 
 - (void)viewDidLoad
 {
@@ -69,8 +73,8 @@ static NSString *const kReceiverAppID = @"5A71905F";
   NSLog(@"did connect");
   NSLog(@"application has launched %hhd", launchedApplication);
   
-  //self.textChannel = [[HTGCTextChannel alloc] initWithNamespace:@"urn:x-cast:de.adf.adf_prototyp"];
-  //[self.gck_deviceManager addChannel:self.textChannel];
+  self.messageChannel = [[MessageChannel alloc] initWithNamespace:@"urn:x-cast:de.adf.adf-prototyp"];
+  [self.gck_deviceManager addChannel:self.messageChannel];
 }
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager didFailToConnectToApplicationWithError:(NSError *)error {
@@ -122,8 +126,8 @@ static NSString *const kReceiverAppID = @"5A71905F";
 - (IBAction)btn_gck_deviceScannerAction:(id)sender {
   NSLog(@"device scan");
   
-  if(!self.gck_selectedDevice) {
-    NSLog(@"device found!!!");
+  if(self.gck_selectedDevice == nil) {
+    NSLog(@"no selected device!!!");
     self.gck_devices = self.gck_deviceScanner.devices;
     
     UIActionSheet *deviceListActonSheet;
@@ -131,7 +135,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
     if([self.gck_devices count] > 0) {
       deviceListActonSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Connect to Device", nil) delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
       
-      for(GCKDevice* device in self.gck_devices) {
+      for(GCKDevice* device in self.gck_deviceScanner.devices) {
         [deviceListActonSheet addButtonWithTitle:device.friendlyName];
       }
     } else {
@@ -145,20 +149,17 @@ static NSString *const kReceiverAppID = @"5A71905F";
     
     [deviceListActonSheet showInView:self.view];
   } else {
+    NSLog(@"device selected!!!");
     //Already connected information
     NSString *str = [NSString stringWithFormat:NSLocalizedString(@"Casting to %@", nil), self.gck_selectedDevice.friendlyName];
-    NSString *mediaTitle = self.gck_applicationMetadata.applicationName;
 
     UIActionSheet *deviceListActonSheet = [[UIActionSheet alloc] initWithTitle:str delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
     
-    if(mediaTitle != nil) {
-      [deviceListActonSheet addButtonWithTitle:mediaTitle];
-    }
-    
     [deviceListActonSheet addButtonWithTitle:@"Disconnect"];
     [deviceListActonSheet addButtonWithTitle:@"Cancel"];
-    deviceListActonSheet.destructiveButtonIndex = (mediaTitle != nil ? 1 : 0);
-    deviceListActonSheet.cancelButtonIndex = (mediaTitle != nil ? 2 : 1);
+    
+    deviceListActonSheet.destructiveButtonIndex = 0;
+    deviceListActonSheet.cancelButtonIndex = 1;
     
     [deviceListActonSheet showInView:self.view];
   }
@@ -198,29 +199,38 @@ static NSString *const kReceiverAppID = @"5A71905F";
   if(self.gck_selectedDevice == nil) {
     return;
   }
-  NSLog(@"%@", [self.mainBundleInfo objectForKey:@"CFBundleIdentifier"]);
+  
   self.gck_deviceManager = [[GCKDeviceManager alloc] initWithDevice:device clientPackageName:[self.mainBundleInfo objectForKey:@"CFBundleIdentifier"]];
   [self.gck_deviceManager setDelegate:self];
   [self.gck_deviceManager connect];
 }
 
 - (void)deviceDisconnected {
+  self.messageChannel = nil;
   self.gck_deviceManager = nil;
   self.gck_selectedDevice = nil;
   
   NSLog(@"Device disconnected");
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+  [textField resignFirstResponder];
+  return YES;
+}
+
 - (void)updateButtonStates {
   if(self.gck_deviceScanner.devices.count == 0) {
     //Hide the cast button
+    [self.connectedToLabel setText:@"Connected to: ..."];
     [self.btn_gck_deviceScanner setImage:[UIImage imageNamed:@"cast_off.png"]];
   } else {
     if (self.gck_deviceManager && self.gck_deviceManager.isConnected) {
       //Enabled state for cast button
+      [self.connectedToLabel setText:[NSString stringWithFormat:@"Connected to: %@", self.gck_selectedDevice.friendlyName]];
       [self.btn_gck_deviceScanner setImage:[UIImage imageNamed:@"cast_on.png"]];
     } else {
       //Disabled state for cast button
+      [self.connectedToLabel setText:@"Connected to: ..."];
       [self.btn_gck_deviceScanner setImage:[UIImage imageNamed:@"cast_off.png"]];
     }
   }
@@ -241,7 +251,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
     return;
   }
   
-  //[self.mesage_textfield sendTextMessage:[self.mesage_textfield text]];
+  [self.messageChannel sendTextMessage:[self.mesage_textfield text]];
 }
 
 @end

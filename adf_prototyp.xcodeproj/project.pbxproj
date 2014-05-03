@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26B1ABFB1913EABC00D6F045 /* GoogleCast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26B1ABFA1913EABC00D6F045 /* GoogleCast.framework */; };
+		26B1ABFF19141F3F00D6F045 /* MessageChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 26B1ABFE19141F3F00D6F045 /* MessageChannel.m */; };
 		973FB7751913B4E500C4CD6E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973FB7741913B4E400C4CD6E /* Foundation.framework */; };
 		973FB7771913B4E500C4CD6E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973FB7761913B4E500C4CD6E /* CoreGraphics.framework */; };
 		973FB7791913B4E500C4CD6E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973FB7781913B4E500C4CD6E /* UIKit.framework */; };
@@ -46,6 +48,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		26B1ABFA1913EABC00D6F045 /* GoogleCast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleCast.framework; sourceTree = "<group>"; };
+		26B1ABFD19141F3F00D6F045 /* MessageChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageChannel.h; sourceTree = "<group>"; };
+		26B1ABFE19141F3F00D6F045 /* MessageChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageChannel.m; sourceTree = "<group>"; };
 		973FB7711913B4E400C4CD6E /* adf_prototyp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = adf_prototyp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		973FB7741913B4E400C4CD6E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		973FB7761913B4E500C4CD6E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -87,6 +92,7 @@
 				97F970EC1913B7C200E75985 /* GoogleCast.framework in Frameworks */,
 				973FB7771913B4E500C4CD6E /* CoreGraphics.framework in Frameworks */,
 				973FB7791913B4E500C4CD6E /* UIKit.framework in Frameworks */,
+				26B1ABFB1913EABC00D6F045 /* GoogleCast.framework in Frameworks */,
 				973FB7751913B4E500C4CD6E /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -104,6 +110,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		26B1ABFC19141F2500D6F045 /* Channel */ = {
+			isa = PBXGroup;
+			children = (
+				26B1ABFD19141F3F00D6F045 /* MessageChannel.h */,
+				26B1ABFE19141F3F00D6F045 /* MessageChannel.m */,
+			);
+			name = Channel;
+			sourceTree = "<group>";
+		};
 		973FB7681913B4E400C4CD6E = {
 			isa = PBXGroup;
 			children = (
@@ -142,6 +157,7 @@
 				973FB7841913B4E500C4CD6E /* AppDelegate.m */,
 				973FB80C1913B74400C4CD6E /* Storyboard */,
 				973FB80B1913B73400C4CD6E /* Controller */,
+				26B1ABFC19141F2500D6F045 /* Channel */,
 				973FB7AC1913B70F00C4CD6E /* ressources */,
 				973FB78F1913B4E500C4CD6E /* Images.xcassets */,
 				973FB77B1913B4E500C4CD6E /* Supporting Files */,
@@ -192,6 +208,7 @@
 		973FB7AD1913B70F00C4CD6E /* frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				26B1ABFA1913EABC00D6F045 /* GoogleCast.framework */,
 			);
 			path = frameworks;
 			sourceTree = "<group>";
@@ -396,6 +413,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				973FB78E1913B4E500C4CD6E /* ViewController.m in Sources */,
+				26B1ABFF19141F3F00D6F045 /* MessageChannel.m in Sources */,
 				973FB7851913B4E500C4CD6E /* AppDelegate.m in Sources */,
 				973FB7811913B4E500C4CD6E /* main.m in Sources */,
 			);
@@ -537,6 +555,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/condero/Documents/workspace/adf_prototyp/adf_prototyp/ressources/frameworks,
+					"$(PROJECT_DIR)/adf_prototyp/ressources/frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "adf_prototyp/adf_prototyp-Prefix.pch";
@@ -555,6 +574,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/condero/Documents/workspace/adf_prototyp/adf_prototyp/ressources/frameworks,
+					"$(PROJECT_DIR)/adf_prototyp/ressources/frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "adf_prototyp/adf_prototyp-Prefix.pch";
