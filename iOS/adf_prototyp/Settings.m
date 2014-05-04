@@ -19,7 +19,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
 @synthesize userDefaults, mainBundleInfo, gck_devices;
 
 @synthesize gck_applicationMetadata, gck_deviceScanner, gck_deviceManager, gck_selectedDevice;
-@synthesize messageChannel;
+//@synthesize messageChannel;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -219,7 +219,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
 }
 
 - (void)deviceDisconnected {
-  self.messageChannel = nil;
+  //self.messageChannel = nil;
   self.gck_deviceManager = nil;
   self.gck_selectedDevice = nil;
   
