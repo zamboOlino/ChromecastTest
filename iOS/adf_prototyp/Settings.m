@@ -10,16 +10,31 @@
 
 static NSString *const kReceiverAppID = @"5A71905F";
 
-@interface Settings ()
+@interface Settings () <UITextFieldDelegate, UIActionSheetDelegate, GCKDeviceScannerListener, GCKDeviceManagerDelegate>
+
+@property NSUserDefaults *userDefaults;
+
+@property NSDictionary *mainBundleInfo;
+@property NSMutableArray *gck_devices;
+
+@property BOOL connecting;
+@property BOOL applicationExists;
+
+//GCDeviceScenner
+@property GCKApplicationMetadata *gck_applicationMetadata;
+@property GCKDeviceManager *gck_deviceManager;
+@property GCKDeviceScanner *gck_deviceScanner;
+@property GCKDevice *gck_selectedDevice;
+//Outlets
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshbutton;
 
 @end
 
 @implementation Settings
 
-@synthesize userDefaults, mainBundleInfo, gck_devices;
+@synthesize userDefaults, mainBundleInfo, gck_devices, connecting;
 
 @synthesize gck_applicationMetadata, gck_deviceScanner, gck_deviceManager, gck_selectedDevice;
-//@synthesize messageChannel;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -36,6 +51,13 @@ static NSString *const kReceiverAppID = @"5A71905F";
   
   self.userDefaults = [NSUserDefaults standardUserDefaults];
   self.mainBundleInfo = [[NSBundle mainBundle] infoDictionary];
+  
+  self.connecting = NO;
+  self.applicationExists = NO;
+  self.gck_devices = [[NSMutableArray alloc] init];
+  
+  self.gck_deviceScanner = [[GCKDeviceScanner alloc] init];
+  [self.gck_deviceScanner addListener:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -43,6 +65,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+  [self.gck_deviceScanner removeListener:self];
   [self.gck_deviceScanner stopScan];
 }
 
@@ -50,6 +73,13 @@ static NSString *const kReceiverAppID = @"5A71905F";
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - UIButtons Actions
+
+- (IBAction)refreshbutton_action:(id)sender {
+  [self reloadCellRow:@[[NSIndexPath indexPathForRow:0 inSection:1]]];
+  [self reloadSection:2 len:1];
 }
 
 #pragma mark - Table view data source
@@ -81,9 +111,11 @@ static NSString *const kReceiverAppID = @"5A71905F";
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-  NSString *header = @"USERNAME";
+  NSString *header;
   
-  if(section == 1) {
+  if(section == 0) {
+    header = @"USERNAME";
+  } else if(section == 1) {
     header = @"GENERAL";
   } else if(section == 2) {
     header = @"DEVICES";
@@ -95,7 +127,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   NSString *cellIdentifier;
-  
+
   if(indexPath.section == 0) {
     cellIdentifier = @"UsernameCell";
   } else if(indexPath.section == 1) {
@@ -126,11 +158,19 @@ static NSString *const kReceiverAppID = @"5A71905F";
       [availableCount setText:[NSString stringWithFormat:@"%lu", (unsigned long)[self.gck_devices count]]];
     } else if(indexPath.row == 1) {
       UILabel *connectedTo = (UILabel *)[cell viewWithTag:101];
-      
-      [connectedTo setText:@"no device"];
-      
-      if(self.gck_selectedDevice != nil) {
-        [connectedTo setText:self.gck_selectedDevice.friendlyName];
+
+      if(self.connecting) {
+        UIActivityIndicatorView *connectedIndicator = (UIActivityIndicatorView *)[cell viewWithTag:102];
+        
+        [connectedTo setHidden:YES];
+        [connectedIndicator startAnimating];
+      } else {
+        [connectedTo setHidden:NO];
+        [connectedTo setText:@"no device"];
+        
+        if(self.gck_selectedDevice != nil) {
+          [connectedTo setText:self.gck_selectedDevice.friendlyName];
+        }
       }
     } else if(indexPath.row == 2) {
       UIButton *disconnect = (UIButton *)[cell viewWithTag:100];
@@ -142,14 +182,20 @@ static NSString *const kReceiverAppID = @"5A71905F";
     UIButton *connectedIcon = (UIButton *)[cell viewWithTag:101];
 
     if([self.gck_devices count] > 0) {
-      GCKDevice *device = self.gck_devices[indexPath.row];
+      GCKDevice *device = (GCKDevice *)self.gck_devices[indexPath.row];
       
       [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
       
+      [friendlyNameLabel setTextColor:[UIColor colorWithRed:255/255.0f green:171/255.0f blue:54/255.0f alpha:1.0f]];
+      
       [connectedIcon setHidden:NO];
+      [connectedIcon setTintColor:[UIColor colorWithRed:255/255.0f green:171/255.0f blue:54/255.0f alpha:1.0f]];
       
       if(self.gck_selectedDevice != nil) {
         if([device isEqual:self.gck_selectedDevice]) {
+          [friendlyNameLabel setTextColor:[UIColor redColor]];
+          
+          [connectedIcon setTintColor:[UIColor redColor]];
           [connectedIcon setImage:[UIImage imageNamed:@"cast_on.png"] forState:UIControlStateNormal];
         } else {
           [connectedIcon setHidden:YES];
@@ -174,10 +220,12 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   if(indexPath.section == 2) {
-    if([self.gck_devices count] > 0) {
-      GCKDevice *device = self.gck_devices[indexPath.row];
+    if(self.gck_selectedDevice == nil && [self.gck_devices count] > 0) {
+      self.connecting = YES;
       
-      self.gck_selectedDevice = device;
+      [self reloadCellRow:@[[NSIndexPath indexPathForRow:1 inSection:1]]];
+
+      GCKDevice *device = (GCKDevice *)self.gck_devices[indexPath.row];
       
       [self connectToDevice:device];
     }
@@ -208,9 +256,6 @@ static NSString *const kReceiverAppID = @"5A71905F";
 #pragma mark - FUNCTIONS
 
 - (void)initDeviceScannerService {
-  self.gck_deviceScanner = [[GCKDeviceScanner alloc] init];
-  
-  [self.gck_deviceScanner addListener:self];
   [self.gck_deviceScanner startScan];
 }
 
@@ -218,21 +263,26 @@ static NSString *const kReceiverAppID = @"5A71905F";
   return self.gck_deviceManager.isConnected;
 }
 
+- (BOOL)isConnectedToApp {
+  return self.gck_deviceManager.isConnectedToApp;
+}
+
 - (void)deviceDisconnected {
-  //self.messageChannel = nil;
+  self.connecting = NO;
+  self.applicationExists = NO;
+  
   self.gck_deviceManager = nil;
   self.gck_selectedDevice = nil;
+  
+  [self reloadSection:1 len:2];
   
   NSLog(@"Device disconnected");
 }
 
 - (void)connectToDevice:(GCKDevice *)device {
-  if(self.gck_selectedDevice == nil) {
-    return;
-  }
-  
   self.gck_deviceManager = [[GCKDeviceManager alloc] initWithDevice:device clientPackageName:[self.mainBundleInfo objectForKey:@"CFBundleIdentifier"]];
-  
+  self.gck_selectedDevice = device;
+
   [self.gck_deviceManager setDelegate:self];
   [self.gck_deviceManager connect];
 }
@@ -243,38 +293,50 @@ static NSString *const kReceiverAppID = @"5A71905F";
   NSLog(@"defice appear!!!");
   if (![self.gck_devices containsObject:device]) {
     [self.gck_devices addObject:device];
-    [self.tableView reloadData];
+    
+    [self reloadCellRow:@[[NSIndexPath indexPathForRow:0 inSection:1]]];
+    [self reloadSection:2 len:1];
   }
 }
 
 - (void)deviceDidGoOffline:(GCKDevice *)device {
   NSLog(@"device disappeared!!!");
   [self.gck_devices removeObject:device];
-  [self.tableView reloadData];
+  
+  [self reloadCellRow:@[[NSIndexPath indexPathForRow:0 inSection:1]]];
+  [self reloadSection:2 len:1];
 }
 
 #pragma mark - GCKDeviceManagerDelegate
 
 - (void)deviceManagerDidConnect:(GCKDeviceManager *)deviceManager {
   NSLog(@"connected!!");
-  [self.gck_deviceManager launchApplication:kReceiverAppID];
+  //VERSUCHT ZU JOINEN WENN EINE APPLIKATION AKTIV IST
+  [self.gck_deviceManager joinApplication:kReceiverAppID];
 }
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager didConnectToCastApplication:(GCKApplicationMetadata *)applicationMetadata sessionID:(NSString *)sessionID launchedApplication:(BOOL)launchedApplication {
   NSLog(@"did connect");
-  //HIER MÜSSEN DIE CHANNELS REIN
+  self.connecting = NO;
+  self.applicationExists = YES;
   
+  [self reloadSection:1 len:2];
+  
+  //HIER MÜSSEN DIE CHANNELS REIN
   //self.messageChannel = [[MessageChannel alloc] initWithNamespace:@"urn:x-cast:de.adf.test"];
   //[self.gck_deviceManager addChannel:self.messageChannel];
 }
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager didFailToConnectToApplicationWithError:(NSError *)error {
   NSLog(@"didFailToConnectToApplicationWithError");
-  [self showError:error];
-  
-  [self deviceDisconnected];
-  
-  [self.tableView reloadData];
+  //8 WENN JOIN FEHLERHAFT ?!
+  if(error.code == 8) {
+    [self.gck_deviceManager launchApplication:kReceiverAppID];
+  } else {
+    [self deviceDisconnected];
+    
+    [self reloadSection:1 len:2];
+  }
 }
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager didFailToConnectWithError:(GCKError *)error {
@@ -283,7 +345,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
   
   [self deviceDisconnected];
   
-  [self.tableView reloadData];
+  [self reloadSection:1 len:2];
 }
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager didDisconnectWithError:(GCKError *)error {
@@ -295,7 +357,17 @@ static NSString *const kReceiverAppID = @"5A71905F";
   
   [self deviceDisconnected];
   
-  [self.tableView reloadData];
+  [self reloadSection:1 len:2];
+}
+
+- (void)deviceManager:(GCKDeviceManager *)deviceManager didDisconnectFromApplicationWithError:(NSError *)error {
+  if (error != nil) {
+    [self showError:error];
+  }
+  
+  [self deviceDisconnected];
+  
+  [self reloadSection:1 len:2];
 }
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
@@ -305,6 +377,23 @@ static NSString *const kReceiverAppID = @"5A71905F";
 }
 
 #pragma mark - MISC
+
+- (void)reloadCellRow:(NSArray *)indexArray {
+  [self.tableView beginUpdates];
+  
+  [self.tableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationFade];
+  
+  [self.tableView endUpdates];
+}
+
+- (void)reloadSection:(NSInteger)from len:(NSInteger)len {
+  [self.tableView beginUpdates];
+
+  NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(from, len)];
+  [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationFade];
+  
+  [self.tableView endUpdates];
+}
 
 - (void)showError:(NSError *)error {
   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil)

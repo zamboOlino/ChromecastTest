@@ -7,16 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-//CHANNEL
-//#import "MessageChannel.h"
 
 @interface Home : UIViewController
-
-@property NSUserDefaults *userDefaults;
-
-@property (weak, nonatomic) IBOutlet UIButton *playbutton;
-
-//CHANNEL
-//@property MessageChannel *messageChannel;
 
 @end

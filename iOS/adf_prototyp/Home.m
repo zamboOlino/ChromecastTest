@@ -7,8 +7,17 @@
 //
 
 #import "Home.h"
+//CHANNEL
+//#import "MessageChannel.h"
 
 @interface Home ()
+
+@property NSUserDefaults *userDefaults;
+
+@property (weak, nonatomic) IBOutlet UIButton *playbutton;
+
+//CHANNEL
+//@property MessageChannel *messageChannel;
 
 @end
 
