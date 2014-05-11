@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26557340191E41190047015B /* SharedDeviceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2655733F191E41190047015B /* SharedDeviceManager.m */; };
 		266703B11916D78100BD382E /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 266703B01916D78100BD382E /* Settings.m */; };
 		266703B41916EC3800BD382E /* Home.m in Sources */ = {isa = PBXBuildFile; fileRef = 266703B31916EC3800BD382E /* Home.m */; };
 		266703B71916F12600BD382E /* Game.m in Sources */ = {isa = PBXBuildFile; fileRef = 266703B61916F12600BD382E /* Game.m */; };
@@ -50,6 +51,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2655733E191E41190047015B /* SharedDeviceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedDeviceManager.h; sourceTree = "<group>"; };
+		2655733F191E41190047015B /* SharedDeviceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedDeviceManager.m; sourceTree = "<group>"; };
 		266703AF1916D78000BD382E /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Settings.h; path = adf_prototyp/Settings.h; sourceTree = SOURCE_ROOT; };
 		266703B01916D78100BD382E /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Settings.m; path = adf_prototyp/Settings.m; sourceTree = SOURCE_ROOT; };
 		266703B21916EC3800BD382E /* Home.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Home.h; path = adf_prototyp/Home.h; sourceTree = SOURCE_ROOT; };
@@ -116,6 +119,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2655733D191E40E00047015B /* SharedController */ = {
+			isa = PBXGroup;
+			children = (
+				2655733E191E41190047015B /* SharedDeviceManager.h */,
+				2655733F191E41190047015B /* SharedDeviceManager.m */,
+			);
+			name = SharedController;
+			sourceTree = "<group>";
+		};
 		26B1ABFC19141F2500D6F045 /* Channel */ = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +176,7 @@
 				973FB80C1913B74400C4CD6E /* Storyboard */,
 				973FB80B1913B73400C4CD6E /* Controller */,
 				26B1ABFC19141F2500D6F045 /* Channel */,
+				2655733D191E40E00047015B /* SharedController */,
 				973FB7AC1913B70F00C4CD6E /* ressources */,
 				973FB78F1913B4E500C4CD6E /* Images.xcassets */,
 				973FB77B1913B4E500C4CD6E /* Supporting Files */,
@@ -428,6 +441,7 @@
 				266703B71916F12600BD382E /* Game.m in Sources */,
 				973FB7851913B4E500C4CD6E /* AppDelegate.m in Sources */,
 				973FB7811913B4E500C4CD6E /* main.m in Sources */,
+				26557340191E41190047015B /* SharedDeviceManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
