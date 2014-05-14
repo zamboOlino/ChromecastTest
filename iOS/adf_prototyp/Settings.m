@@ -20,8 +20,8 @@ static NSString *const kReceiverAppID = @"5A71905F";
 @property NSDictionary *mainBundleInfo;
 @property NSMutableArray *gck_devices;
 
+@property BOOL reconnect;
 @property BOOL connecting;
-@property BOOL applicationExists;
 
 //GCDeviceScenner
 @property GCKApplicationMetadata *gck_applicationMetadata;
@@ -35,7 +35,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 @implementation Settings
 
-@synthesize userDefaults, mainBundleInfo, gck_devices, connecting;
+@synthesize userDefaults, mainBundleInfo, gck_devices, connecting, reconnect;
 
 @synthesize gck_applicationMetadata, gck_deviceScanner, gck_deviceManager, gck_selectedDevice;
 
@@ -56,7 +56,6 @@ static NSString *const kReceiverAppID = @"5A71905F";
   self.mainBundleInfo = [[NSBundle mainBundle] infoDictionary];
   
   self.connecting = NO;
-  self.applicationExists = NO;
   self.gck_devices = [[NSMutableArray alloc] init];
   
   self.gck_deviceScanner = [[GCKDeviceScanner alloc] init];
@@ -183,6 +182,8 @@ static NSString *const kReceiverAppID = @"5A71905F";
   } else if(indexPath.section == 2) {
     UILabel *friendlyNameLabel = (UILabel *)[cell viewWithTag:100];
     UIButton *connectedIcon = (UIButton *)[cell viewWithTag:101];
+    
+    [connectedIcon setHidden:NO];
 
     if([self.gck_devices count] > 0) {
       GCKDevice *device = (GCKDevice *)self.gck_devices[indexPath.row];
@@ -191,20 +192,16 @@ static NSString *const kReceiverAppID = @"5A71905F";
       
       [friendlyNameLabel setTextColor:[UIColor colorWithRed:255/255.0f green:171/255.0f blue:54/255.0f alpha:1.0f]];
       
-      [connectedIcon setHidden:NO];
+      [connectedIcon setImage:[UIImage imageNamed:@"cast_off.png"] forState:UIControlStateNormal];
       [connectedIcon setTintColor:[UIColor colorWithRed:255/255.0f green:171/255.0f blue:54/255.0f alpha:1.0f]];
       
       if(self.gck_selectedDevice != nil) {
         if([device isEqual:self.gck_selectedDevice]) {
           [friendlyNameLabel setTextColor:[UIColor redColor]];
           
-          [connectedIcon setTintColor:[UIColor redColor]];
           [connectedIcon setImage:[UIImage imageNamed:@"cast_on.png"] forState:UIControlStateNormal];
-        } else {
-          [connectedIcon setHidden:YES];
+          [connectedIcon setTintColor:[UIColor redColor]];
         }
-      } else {
-        [connectedIcon setImage:[UIImage imageNamed:@"cast_off.png"] forState:UIControlStateNormal];
       }
       
       [friendlyNameLabel setTextAlignment:NSTextAlignmentLeft];
@@ -223,12 +220,22 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   if(indexPath.section == 2) {
+    GCKDevice *device = (GCKDevice *)self.gck_devices[indexPath.row];
+
     if(self.gck_selectedDevice == nil && [self.gck_devices count] > 0) {
+      self.reconnect = NO;
       self.connecting = YES;
       
       [self reloadCellRow:@[[NSIndexPath indexPathForRow:1 inSection:1]]];
-
-      GCKDevice *device = (GCKDevice *)self.gck_devices[indexPath.row];
+      
+      [self connectToDevice:device];
+    } else if(![device isEqual:self.gck_selectedDevice]) {
+      //DISCONNECT
+      [self.SDM.gck_deviceManager disconnect];
+      
+      self.reconnect = YES;
+      //NEW CONNECTION
+      self.connecting = YES;
       
       [self connectToDevice:device];
     }
@@ -250,13 +257,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 #pragma mark - UIButtons Actions
 - (void)disconnectFromDevice:(id)sender {
-  //[self.gck_deviceManager leaveApplication];
-  //[self.gck_deviceManager disconnect];
-  
-  [self.SDM.gck_deviceManager leaveApplication];
   [self.SDM.gck_deviceManager disconnect];
-  
-  [self deviceDisconnected];
 }
 
 #pragma mark - FUNCTIONS
@@ -267,20 +268,15 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 - (BOOL)isConnected {
   return self.SDM.gck_deviceManager.isConnected;
-  //return self.gck_deviceManager.isConnected;
 }
 
 - (BOOL)isConnectedToApp {
   return self.SDM.gck_deviceManager.isConnectedToApp;
-  //return self.gck_deviceManager.isConnectedToApp;
 }
 
 - (void)deviceDisconnected {
   self.connecting = NO;
-  self.applicationExists = NO;
   
-  //self.gck_deviceManager = nil;
-  //self.SDM.gck_deviceManager = nil;
   self.gck_selectedDevice = nil;
   
   [self reloadSection:1 len:2];
@@ -292,15 +288,9 @@ static NSString *const kReceiverAppID = @"5A71905F";
   self.SDM = [SharedDeviceManager sharedDeviceManager:device];
   [self.SDM setDelegate:self];
   
-  //self.gck_deviceManager = self.SDM.gck_deviceManager;
-  //self.gck_deviceManager = [[GCKDeviceManager alloc] initWithDevice:device clientPackageName:[self.mainBundleInfo objectForKey:@"CFBundleIdentifier"]];
-  
   self.gck_selectedDevice = device;
-
-  //[self.gck_deviceManager setDelegate:self];
-  //[self.gck_deviceManager connect];
-  
-  [self.SDM.gck_deviceManager connect];
+  [self reloadSection:1 len:2];
+  //[self.SDM.gck_deviceManager connect];
 }
 
 #pragma mark - GCKDeviceScannerListener
@@ -310,8 +300,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
   if (![self.gck_devices containsObject:device]) {
     [self.gck_devices addObject:device];
     
-    [self reloadCellRow:@[[NSIndexPath indexPathForRow:0 inSection:1]]];
-    [self reloadSection:2 len:1];
+    [self reloadSection:1 len:2];
   }
 }
 
@@ -319,15 +308,15 @@ static NSString *const kReceiverAppID = @"5A71905F";
   NSLog(@"device disappeared!!!");
   [self.gck_devices removeObject:device];
   
-  [self reloadCellRow:@[[NSIndexPath indexPathForRow:0 inSection:1]]];
-  [self reloadSection:2 len:1];
+  [self reloadSection:1 len:2];
 }
 
-#pragma mark - SDMDelegate
+#pragma mark - SDMDelegate / GCKDeviceManagerDelegate
 
 - (void)dmConnect:(GCKDeviceManager *)dm {
-  //[self.gck_deviceManager joinApplication:kReceiverAppID];
-  [self.SDM.gck_deviceManager joinApplication:kReceiverAppID];
+  self.connecting = NO;
+  
+  [self reloadSection:1 len:2];
 }
 
 - (void)dm:(GCKDeviceManager *)dm connectFail:(NSError *)error {
@@ -335,8 +324,6 @@ static NSString *const kReceiverAppID = @"5A71905F";
   [self showError:error];
   
   [self deviceDisconnected];
-  
-  [self reloadSection:1 len:2];
 }
 
 - (void)dm:(GCKDeviceManager *)dm disconnect:(NSError *)error {
@@ -348,119 +335,10 @@ static NSString *const kReceiverAppID = @"5A71905F";
   
   [self deviceDisconnected];
   
-  [self reloadSection:1 len:2];
-}
-
-- (void)dm:(GCKDeviceManager *)dm connectToApp:(GCKApplicationMetadata *)metaData sessID:(NSString *)sessID launchedApp:(BOOL)launchedApp {
-  NSLog(@"did connect");
-  self.connecting = NO;
-  self.applicationExists = YES;
-  
-  [self reloadSection:1 len:2];
-  
-  //HIER MÜSSEN DIE CHANNELS REIN
-  //self.messageChannel = [[MessageChannel alloc] initWithNamespace:@"urn:x-cast:de.adf.test"];
-  //[self.gck_deviceManager addChannel:self.messageChannel];
-}
-
-- (void)dm:(GCKDeviceManager *)dm connectFailToApp:(NSError *)error {
-  NSLog(@"didFailToConnectToApplicationWithError");
-  //8 WENN JOIN FEHLERHAFT ?!
-  if(error.code == 8) {
-    //[self.gck_deviceManager launchApplication:kReceiverAppID];
-    [self.SDM.gck_deviceManager launchApplication:kReceiverAppID];
-  } else {
-    [self deviceDisconnected];
+  if(self.reconnect) {
     
-    [self reloadSection:1 len:2];
   }
 }
-
-- (void)dm:(GCKDeviceManager *)dm disconnectFromApp:(NSError *)error {
-  if (error != nil) {
-    [self showError:error];
-  }
-  
-  [self deviceDisconnected];
-  
-  [self reloadSection:1 len:2];
-}
-
-- (void)dm:(GCKDeviceManager *)dm appStatus:(GCKApplicationMetadata *)metaData {
-  self.gck_applicationMetadata = metaData;
-  
-  NSLog(@"Received device status: %@", metaData);
-}
-
-#pragma mark - GCKDeviceManagerDelegate
-
-/*- (void)deviceManagerDidConnect:(GCKDeviceManager *)deviceManager {
-  NSLog(@"connected!!");
-  //VERSUCHT ZU JOINEN WENN EINE APPLIKATION AKTIV IST
-  //das ist erst wichtig wenn er auf play drückt
-  [self.gck_deviceManager joinApplication:kReceiverAppID];
-}
-
-- (void)deviceManager:(GCKDeviceManager *)deviceManager didConnectToCastApplication:(GCKApplicationMetadata *)applicationMetadata sessionID:(NSString *)sessionID launchedApplication:(BOOL)launchedApplication {
-  NSLog(@"did connect");
-  self.connecting = NO;
-  self.applicationExists = YES;
-  
-  [self reloadSection:1 len:2];
-  
-  //HIER MÜSSEN DIE CHANNELS REIN
-  //self.messageChannel = [[MessageChannel alloc] initWithNamespace:@"urn:x-cast:de.adf.test"];
-  //[self.gck_deviceManager addChannel:self.messageChannel];
-}
-
-- (void)deviceManager:(GCKDeviceManager *)deviceManager didFailToConnectToApplicationWithError:(NSError *)error {
-  NSLog(@"didFailToConnectToApplicationWithError");
-  //8 WENN JOIN FEHLERHAFT ?!
-  if(error.code == 8) {
-    [self.gck_deviceManager launchApplication:kReceiverAppID];
-  } else {
-    [self deviceDisconnected];
-    
-    [self reloadSection:1 len:2];
-  }
-}
-
-- (void)deviceManager:(GCKDeviceManager *)deviceManager didFailToConnectWithError:(GCKError *)error {
-  NSLog(@"didFailToConnectWithError");
-  [self showError:error];
-  
-  [self deviceDisconnected];
-  
-  [self reloadSection:1 len:2];
-}
-
-- (void)deviceManager:(GCKDeviceManager *)deviceManager didDisconnectWithError:(GCKError *)error {
-  NSLog(@"Received notification that device disconnected");
-  
-  if (error != nil) {
-    [self showError:error];
-  }
-  
-  [self deviceDisconnected];
-  
-  [self reloadSection:1 len:2];
-}
-
-- (void)deviceManager:(GCKDeviceManager *)deviceManager didDisconnectFromApplicationWithError:(NSError *)error {
-  if (error != nil) {
-    [self showError:error];
-  }
-  
-  [self deviceDisconnected];
-  
-  [self reloadSection:1 len:2];
-}
-
-- (void)deviceManager:(GCKDeviceManager *)deviceManager didReceiveStatusForApplication:(GCKApplicationMetadata *)applicationMetadata {
-  self.gck_applicationMetadata = applicationMetadata;
-  
-  NSLog(@"Received device status: %@", applicationMetadata);
-}*/
 
 #pragma mark - MISC
 
