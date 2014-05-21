@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MessageChannel : GCKCastChannel
+@interface MovementChannel : GCKCastChannel
 
 @end

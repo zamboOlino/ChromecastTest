@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 ADF. All rights reserved.
 //
 
-#import "MessageChannel.h"
+#import "MovementChannel.h"
 
-@implementation MessageChannel
+@implementation MovementChannel
 
-- (void)didReceiveTextMessage:(NSString*)message {
+- (void)didReceiveTextMessage:(NSString *)message {
   NSLog(@"received message: %@", message);
 }
 

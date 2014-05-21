@@ -10,13 +10,15 @@
 
 @protocol SDMDelegate
 
-- (void)dmConnect:(GCKDeviceManager *)dm;
+- (void)connect:(GCKDeviceManager *)dm;
+- (void)dm:(GCKDeviceManager *)dm disconnect:(NSError *)error;
+- (void)dm:(GCKDeviceManager *)dm connectFail:(NSError *)error;
+
 - (void)dm:(GCKDeviceManager *)dm connectToApp:(GCKApplicationMetadata *)metaData sessID:(NSString *)sessID launchedApp:(BOOL)launchedApp;
 - (void)dm:(GCKDeviceManager *)dm disconnectFromApp:(NSError *)error;
-- (void)dm:(GCKDeviceManager *)dm disconnect:(NSError *)error;
 - (void)dm:(GCKDeviceManager *)dm connectFailToApp:(NSError *)error;
-- (void)dm:(GCKDeviceManager *)dm connectFail:(NSError *)error;
 - (void)dm:(GCKDeviceManager *)dm failToStopApp:(NSError *)error;
+
 - (void)dm:(GCKDeviceManager *)dm appStatus:(GCKApplicationMetadata *)metaData;
 //- (void)dm:(GCKDeviceManager *)dm volumeLevel:(float)level isMuted:(BOOL)isMuted;
 
@@ -28,10 +30,12 @@
   __weak id delegate;
 }
 
-@property GCKDeviceManager *gck_deviceManager;
-@property GCKDevice *gck_selectedDevice;
+@property (strong, nonatomic) GCKDeviceManager *gck_deviceManager;
+@property (strong, nonatomic) GCKDevice *gck_selectedDevice;
 @property (weak, nonatomic) id delegate;
 
-+ (SharedDeviceManager *)sharedDeviceManager:(GCKDevice *)device;
++ (SharedDeviceManager *)sharedDeviceManager;
+
+- (void)initDeviceManager:(GCKDevice *)device;
 
 @end

@@ -14,35 +14,39 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 @synthesize delegate, gck_deviceManager, gck_selectedDevice;
 
-+ (SharedDeviceManager *)sharedDeviceManager:(GCKDevice *)device {
++ (SharedDeviceManager *)sharedDeviceManager {
   static SharedDeviceManager *sharedDeviceManagerInstance = nil;
   static dispatch_once_t oncePredicate;
   
   dispatch_once(&oncePredicate, ^{
     //if(sharedDeviceManagerInstance == nil) {
-    sharedDeviceManagerInstance = [[self alloc] init:device];
+    sharedDeviceManagerInstance = [[self alloc] init];
     //}
   });
   
   return sharedDeviceManagerInstance;
 }
 
-- (id)init:(GCKDevice *)device {
-  self = [super init];
-  
-  if(self) {
-    self.gck_deviceManager = [[GCKDeviceManager alloc] initWithDevice:device clientPackageName:kReceiverAppID];
-    [self.gck_deviceManager setDelegate:self];
+- (id)init {
+  if(self = [super init]) {
+    // your custom initialization
   }
   return self;
+}
+
+- (void)initDeviceManager:(GCKDevice *)device {
+  self.gck_deviceManager = [[GCKDeviceManager alloc] initWithDevice:device clientPackageName:kReceiverAppID];
+  [self.gck_deviceManager setDelegate:self];
 }
 
 #pragma mark -
 #pragma mark GCKDeviceManager Methods
 
 - (void)deviceManagerDidConnect:(GCKDeviceManager *)deviceManager {
+  self.gck_selectedDevice = deviceManager.device;
+  
   if([self.delegate conformsToProtocol:@protocol(SDMDelegate)]) {
-    [self.delegate dmConnect:deviceManager];
+    [self.delegate connect:deviceManager];
   }
 }
 
@@ -59,6 +63,8 @@ static NSString *const kReceiverAppID = @"5A71905F";
 }
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager didDisconnectWithError:(NSError *)error {
+  self.gck_selectedDevice = nil;
+  
   if([self.delegate conformsToProtocol:@protocol(SDMDelegate)]) {
     [self.delegate dm:deviceManager disconnect:error];
   }
@@ -71,6 +77,8 @@ static NSString *const kReceiverAppID = @"5A71905F";
 }
 
 - (void)deviceManager:(GCKDeviceManager *)deviceManager didFailToConnectWithError:(NSError *)error {
+  self.gck_selectedDevice = nil;
+  
   if([self.delegate conformsToProtocol:@protocol(SDMDelegate)]) {
     [self.delegate dm:deviceManager connectFail:error];
   }

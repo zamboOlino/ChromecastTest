@@ -12,7 +12,7 @@
 		266703B41916EC3800BD382E /* Home.m in Sources */ = {isa = PBXBuildFile; fileRef = 266703B31916EC3800BD382E /* Home.m */; };
 		266703B71916F12600BD382E /* Game.m in Sources */ = {isa = PBXBuildFile; fileRef = 266703B61916F12600BD382E /* Game.m */; };
 		26B1ABFB1913EABC00D6F045 /* GoogleCast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26B1ABFA1913EABC00D6F045 /* GoogleCast.framework */; };
-		26B1ABFF19141F3F00D6F045 /* MessageChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 26B1ABFE19141F3F00D6F045 /* MessageChannel.m */; };
+		26B1ABFF19141F3F00D6F045 /* MovementChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 26B1ABFE19141F3F00D6F045 /* MovementChannel.m */; };
 		973FB7751913B4E500C4CD6E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973FB7741913B4E400C4CD6E /* Foundation.framework */; };
 		973FB7771913B4E500C4CD6E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973FB7761913B4E500C4CD6E /* CoreGraphics.framework */; };
 		973FB7791913B4E500C4CD6E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973FB7781913B4E500C4CD6E /* UIKit.framework */; };
@@ -60,8 +60,8 @@
 		266703B51916F12600BD382E /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Game.h; path = adf_prototyp/Game.h; sourceTree = SOURCE_ROOT; };
 		266703B61916F12600BD382E /* Game.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Game.m; path = adf_prototyp/Game.m; sourceTree = SOURCE_ROOT; };
 		26B1ABFA1913EABC00D6F045 /* GoogleCast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleCast.framework; sourceTree = "<group>"; };
-		26B1ABFD19141F3F00D6F045 /* MessageChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageChannel.h; sourceTree = "<group>"; };
-		26B1ABFE19141F3F00D6F045 /* MessageChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageChannel.m; sourceTree = "<group>"; };
+		26B1ABFD19141F3F00D6F045 /* MovementChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovementChannel.h; sourceTree = "<group>"; };
+		26B1ABFE19141F3F00D6F045 /* MovementChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovementChannel.m; sourceTree = "<group>"; };
 		973FB7711913B4E400C4CD6E /* test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		973FB7741913B4E400C4CD6E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		973FB7761913B4E500C4CD6E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -131,8 +131,8 @@
 		26B1ABFC19141F2500D6F045 /* Channel */ = {
 			isa = PBXGroup;
 			children = (
-				26B1ABFD19141F3F00D6F045 /* MessageChannel.h */,
-				26B1ABFE19141F3F00D6F045 /* MessageChannel.m */,
+				26B1ABFD19141F3F00D6F045 /* MovementChannel.h */,
+				26B1ABFE19141F3F00D6F045 /* MovementChannel.m */,
 			);
 			name = Channel;
 			sourceTree = "<group>";
@@ -436,7 +436,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				266703B41916EC3800BD382E /* Home.m in Sources */,
-				26B1ABFF19141F3F00D6F045 /* MessageChannel.m in Sources */,
+				26B1ABFF19141F3F00D6F045 /* MovementChannel.m in Sources */,
 				266703B11916D78100BD382E /* Settings.m in Sources */,
 				266703B71916F12600BD382E /* Game.m in Sources */,
 				973FB7851913B4E500C4CD6E /* AppDelegate.m in Sources */,

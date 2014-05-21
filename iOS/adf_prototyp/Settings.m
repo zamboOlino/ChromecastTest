@@ -7,27 +7,26 @@
 //
 
 #import "Settings.h"
+
 #import "SharedDeviceManager.h"
 
-static NSString *const kReceiverAppID = @"5A71905F";
+@interface Settings () <UITextFieldDelegate, GCKDeviceScannerListener, SDMDelegate>
 
-@interface Settings () <UITextFieldDelegate, UIActionSheetDelegate, GCKDeviceScannerListener, /*GCKDeviceManagerDelegate,*/ SDMDelegate>
+@property (strong, nonatomic) SharedDeviceManager *SDM;
 
-@property SharedDeviceManager *SDM;
+@property (strong, nonatomic) NSUserDefaults *userDefaults;
 
-@property NSUserDefaults *userDefaults;
+@property (strong, nonatomic) NSDictionary *mainBundleInfo;
+@property (strong, nonatomic) NSMutableArray *gck_devices;
 
-@property NSDictionary *mainBundleInfo;
-@property NSMutableArray *gck_devices;
-
-@property BOOL reconnect;
-@property BOOL connecting;
+@property (assign, nonatomic) BOOL reconnect;
+@property (assign, nonatomic) BOOL connecting;
 
 //GCDeviceScenner
-@property GCKApplicationMetadata *gck_applicationMetadata;
-@property GCKDeviceManager *gck_deviceManager;
-@property GCKDeviceScanner *gck_deviceScanner;
-@property GCKDevice *gck_selectedDevice;
+@property (strong, nonatomic) GCKApplicationMetadata *gck_applicationMetadata;
+@property (strong, nonatomic) GCKDeviceManager *gck_deviceManager;
+@property (strong, nonatomic) GCKDeviceScanner *gck_deviceScanner;
+@property (strong, nonatomic) GCKDevice *gck_selectedDevice;
 //Outlets
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshbutton;
 
@@ -58,15 +57,25 @@ static NSString *const kReceiverAppID = @"5A71905F";
   self.connecting = NO;
   self.gck_devices = [[NSMutableArray alloc] init];
   
-  self.gck_deviceScanner = [[GCKDeviceScanner alloc] init];
-  [self.gck_deviceScanner addListener:self];
+  [self initSDM];
+  [self initDeviceScanner];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-  [self initDeviceScannerService];
+  [super viewWillAppear:animated];
+  
+  if(self.SDM.gck_deviceManager) {
+    self.gck_selectedDevice = self.SDM.gck_selectedDevice;
+  }
+
+  [self startScan];
+    
+  [self performSelector:@selector(stopScan) withObject:nil afterDelay:15];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+  [super viewWillDisappear:animated];
+  
   [self.gck_deviceScanner removeListener:self];
   [self.gck_deviceScanner stopScan];
 }
@@ -80,8 +89,9 @@ static NSString *const kReceiverAppID = @"5A71905F";
 #pragma mark - UIButtons Actions
 
 - (IBAction)refreshbutton_action:(id)sender {
-  [self reloadCellRow:@[[NSIndexPath indexPathForRow:0 inSection:1]]];
-  [self reloadSection:2 len:1];
+  [self startScan];
+  
+  [self performSelector:@selector(stopScan) withObject:nil afterDelay:15];
 }
 
 #pragma mark - Table view data source
@@ -190,10 +200,10 @@ static NSString *const kReceiverAppID = @"5A71905F";
       
       [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
       
-      [friendlyNameLabel setTextColor:[UIColor colorWithRed:255/255.0f green:171/255.0f blue:54/255.0f alpha:1.0f]];
+      [friendlyNameLabel setTextColor:[UIColor colorWithRed:52/255.0f green:126/255.0f blue:161/255.0f alpha:1.0f]];
       
       [connectedIcon setImage:[UIImage imageNamed:@"cast_off.png"] forState:UIControlStateNormal];
-      [connectedIcon setTintColor:[UIColor colorWithRed:255/255.0f green:171/255.0f blue:54/255.0f alpha:1.0f]];
+      [connectedIcon setTintColor:[UIColor colorWithRed:52/255.0f green:126/255.0f blue:161/255.0f alpha:1.0f]];
       
       if(self.gck_selectedDevice != nil) {
         if([device isEqual:self.gck_selectedDevice]) {
@@ -232,6 +242,8 @@ static NSString *const kReceiverAppID = @"5A71905F";
     } else if(![device isEqual:self.gck_selectedDevice]) {
       //DISCONNECT
       [self.SDM.gck_deviceManager disconnect];
+
+      [self deviceDisconnected];
       
       self.reconnect = YES;
       //NEW CONNECTION
@@ -258,39 +270,53 @@ static NSString *const kReceiverAppID = @"5A71905F";
 #pragma mark - UIButtons Actions
 - (void)disconnectFromDevice:(id)sender {
   [self.SDM.gck_deviceManager disconnect];
+  
+  [self deviceDisconnected];
 }
 
 #pragma mark - FUNCTIONS
 
-- (void)initDeviceScannerService {
+- (void)initSDM {
+  self.SDM = [SharedDeviceManager sharedDeviceManager];
+  [self.SDM setDelegate:self];
+}
+
+- (void)initDeviceScanner {
+  self.gck_deviceScanner = [[GCKDeviceScanner alloc] init];
+  [self.gck_deviceScanner addListener:self];
+}
+
+- (void)startScan {
   [self.gck_deviceScanner startScan];
+}
+
+- (void)stopScan {
+  [self.gck_deviceScanner stopScan];
+}
+
+- (void)connectToDevice:(GCKDevice *)device {
+  [self reloadSection:1 len:2];
+
+  [self.SDM initDeviceManager:device];
+  
+  self.gck_selectedDevice = device;
+  
+  [self.SDM.gck_deviceManager connect];
 }
 
 - (BOOL)isConnected {
   return self.SDM.gck_deviceManager.isConnected;
 }
 
-- (BOOL)isConnectedToApp {
-  return self.SDM.gck_deviceManager.isConnectedToApp;
-}
-
 - (void)deviceDisconnected {
   self.connecting = NO;
   
   self.gck_selectedDevice = nil;
+  self.SDM.gck_deviceManager = nil;
   
   [self reloadSection:1 len:2];
   
   NSLog(@"Device disconnected");
-}
-
-- (void)connectToDevice:(GCKDevice *)device {
-  self.SDM = [SharedDeviceManager sharedDeviceManager:device];
-  [self.SDM setDelegate:self];
-  
-  self.gck_selectedDevice = device;
-  [self reloadSection:1 len:2];
-  //[self.SDM.gck_deviceManager connect];
 }
 
 #pragma mark - GCKDeviceScannerListener
@@ -313,21 +339,26 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 #pragma mark - SDMDelegate / GCKDeviceManagerDelegate
 
-- (void)dmConnect:(GCKDeviceManager *)dm {
+- (void)connect:(GCKDeviceManager *)dm {
+  NSLog(@"dmConnect");
   self.connecting = NO;
   
-  [self reloadSection:1 len:2];
+  if([self isConnected]) {
+    [self reloadSection:1 len:2];
+
+    [self.navigationController popToRootViewControllerAnimated:YES];
+  }
 }
 
 - (void)dm:(GCKDeviceManager *)dm connectFail:(NSError *)error {
-  NSLog(@"didFailToConnectWithError");
+  NSLog(@"connectFail");
   [self showError:error];
   
   [self deviceDisconnected];
 }
 
 - (void)dm:(GCKDeviceManager *)dm disconnect:(NSError *)error {
-  NSLog(@"Received notification that device disconnected");
+  NSLog(@"disconnect");
   
   if (error != nil) {
     [self showError:error];
