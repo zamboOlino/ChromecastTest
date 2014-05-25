@@ -7,12 +7,14 @@
 //
 
 #import "Home.h"
+#import "Game.h"
+
+#import <GoogleCast/GoogleCast.h>
 
 #import "SharedDeviceManager.h"
-//CHANNEL
-#import "MovementChannel.h"
 
-static NSString *const kReceiverAppID = @"5A71905F";
+//static NSString *const kReceiverAppID = @"5A71905F"; //TEST
+static NSString *const kReceiverAppID = @"BCA73134"; //PONG
 
 @interface Home () <UIAlertViewDelegate, SDMDelegate>
 
@@ -31,8 +33,6 @@ static NSString *const kReceiverAppID = @"5A71905F";
 @property (strong, nonatomic) GCKDeviceManager *gck_deviceManager;
 @property (strong, nonatomic) GCKDeviceScanner *gck_deviceScanner;
 @property (strong, nonatomic) GCKDevice *gck_selectedDevice;
-//CHANNEL
-@property (strong, nonatomic) MovementChannel *movementChannel;
 
 @property (weak, nonatomic) IBOutlet UIButton *gameButton;
 @property (weak, nonatomic) IBOutlet UIButton *joinButton;
@@ -82,9 +82,15 @@ static NSString *const kReceiverAppID = @"5A71905F";
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
   
+  [self.SDM setDelegate:self];
+  
   if(![self isConnected]) {
     [self performSegueWithIdentifier:@"SettingsSegue" sender:self];
   }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+  [self.SDM setDelegate:nil];
 }
 
 #pragma mark - UIButton Actions
@@ -148,7 +154,6 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 - (void)initSDM {
   self.SDM = [SharedDeviceManager sharedDeviceManager];
-  [self.SDM setDelegate:self];
 }
 
 - (void)initViewComponents {
@@ -158,6 +163,7 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 #pragma mark - SDMDelegate / GCKDeviceManagerDelegate
 
+
 - (void)dm:(GCKDeviceManager *)dm connectToApp:(GCKApplicationMetadata *)metaData sessID:(NSString *)sessID launchedApp:(BOOL)launchedApp {
   NSLog(@"connectToApp");
   self.connectingApp = NO;
@@ -166,9 +172,6 @@ static NSString *const kReceiverAppID = @"5A71905F";
   self.gck_sessionID = sessID;
   NSLog(@"%d", launchedApp);
   if(launchedApp) {
-    self.movementChannel = [[MovementChannel alloc] initWithNamespace:@"urn:x-cast:de.adf.chromecast.pong"];
-    [self.SDM.gck_deviceManager addChannel:self.movementChannel];
-    
     [self performSegueWithIdentifier:@"GameSegue" sender:self];
   }
 }
@@ -230,15 +233,12 @@ static NSString *const kReceiverAppID = @"5A71905F";
   NSLog(@"Received device status: %@", metaData);
 }
 
-/*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+  if([[segue identifier] isEqualToString:@"GameSegue"]) {
+//    Game *controller = [segue destinationViewController];
+  }
 }
-*/
 
 @end

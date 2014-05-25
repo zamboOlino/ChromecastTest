@@ -9,6 +9,17 @@
 
 /**
  * The receiver application ID for the Default Media Receiver.
+ *
+ * Any operations which apply to a currently active stream (play, pause, seek, stop, etc) require
+ * a valid (that is, non-nil) media status, or they will return |kGCKInvalidRequestID| and will
+ * not send the request. A media status is requested automatically when the channel connects, is
+ * included with a successful load completed respose, and can also be updated at any time.
+ * The media status can also become nil at any time; this will happen if the channel is
+ * temporarily disconnected, for example.
+ *
+ * In general when using this channel, media status changes should be monitored with
+ * |mediaControlChannelDidUpdateStatus:|, and methods which act on streams should be called only
+ * while the media status is non-nil.
  */
 extern NSString *const kGCKMediaDefaultReceiverApplicationID;
 
@@ -49,7 +60,7 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
 - (id)init;
 
 /**
- * Loads, enqueues (at the end of the queue), and starts playback of a new media item.
+ * Loads and starts playback of a new media item.
  *
  * @param mediaInfo An object describing the media item to load.
  * @return The request ID, or kGCKInvalidRequestID if the message could not be sent.
@@ -57,8 +68,7 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
 - (NSInteger)loadMedia:(GCKMediaInformation *)mediaInfo;
 
 /**
- * Loads, enqueues (at the end of the queue), and optionally starts playback of a new media
- * item.
+ * Loads and optionally starts playback of a new media item.
  *
  * @param mediaInfo An object describing the media item to load.
  * @param autoplay Whether playback should start immediately.
@@ -67,7 +77,7 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
 - (NSInteger)loadMedia:(GCKMediaInformation *)mediaInfo autoplay:(BOOL)autoplay;
 
 /**
- * Loads, enqueues, and optionally starts playback of a new media item.
+ * Loads and optionally starts playback of a new media item.
  *
  * @param mediaInfo An object describing the media item to load.
  * @param autoplay Whether playback should start immediately.
@@ -79,7 +89,7 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
           playPosition:(NSTimeInterval)playPosition;
 
 /**
- * Loads, enqueues, and optionally starts playback of a new media item.
+ * Loads and optionally starts playback of a new media item.
  *
  * @param mediaInfo An object describing the media item to load.
  * @param autoplay Whether playback should start immediately.
@@ -93,14 +103,14 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
             customData:(id)customData;
 
 /**
- * Pauses playback of the current media item.
+ * Pauses playback of the current media item. Request will fail if there is no current media status.
  *
  * @return The request ID, or kGCKInvalidRequestID if the message could not be sent.
  */
 - (NSInteger)pause;
 
 /**
- * Pauses playback of the current media item.
+ * Pauses playback of the current media item. Request will fail if there is no current media status.
  *
  * @param customData Custom application-specific data to pass along with the request.
  * @return The request ID, or kGCKInvalidRequestID if the message could not be sent.
@@ -108,14 +118,14 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
 - (NSInteger)pauseWithCustomData:(id)customData;
 
 /**
- * Stops playback of the current media item.
+ * Stops playback of the current media item. Request will fail if there is no current media status.
  *
  * @return The request ID, or kGCKInvalidRequestID if the message could not be sent.
  */
 - (NSInteger)stop;
 
 /**
- * Stops playback of the current media item.
+ * Stops playback of the current media item. Request will fail if there is no current media status.
  *
  * @param customData Custom application-specific data to pass along with the request.
  * @return The request ID, or kGCKInvalidRequestID if the message could not be sent.
@@ -124,14 +134,14 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
 
 /**
  * Begins (or resumes) playback of the current media item. Playback always begins at the
- * beginning of the stream. Asserts if there is no current media session.
+ * beginning of the stream. Request will fail if there is no current media status.
  * @return The request ID, or kGCKInvalidRequestID if the message could not be sent.
  */
 - (NSInteger)play;
 
 /**
  * Begins (or resumes) playback of the current media item. Playback always begins at the
- * beginning of the stream. Asserts if there is no current media session.
+ * beginning of the stream. Request will fail if there is no current media status.
  *
  * @param customData Custom application-specific data to pass along with the request.
  * @return The request ID, or kGCKInvalidRequestID if the message could not be sent.
@@ -139,7 +149,8 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
 - (NSInteger)playWithCustomData:(id)customData;
 
 /**
- * Seeks to a new time within the current media item.
+ * Seeks to a new time within the current media item. Request will fail if there is no current
+ * media status.
  *
  * @param position The new time interval from the beginning of the stream.
  * @return The request ID, or kGCKInvalidRequestID if the message could not be sent.
@@ -147,7 +158,8 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
 - (NSInteger)seekToTimeInterval:(NSTimeInterval)timeInterval;
 
 /**
- * Seeks to a new position within the current media item.
+ * Seeks to a new position within the current media item. Request will fail if there is no current
+ * media status.
  *
  * @param position The new time interval from the beginning of the stream.
  * @param resumeState The action to take after the seek operation has finished.
@@ -157,7 +169,8 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
                     resumeState:(GCKMediaControlChannelResumeState)resumeState;
 
 /**
- * Seeks to a new position within the current media item.
+ * Seeks to a new position within the current media item. Request will fail if there is no current
+ * media status.
  *
  * @param position The time interval from the beginning of the stream.
  * @param resumeState The action to take after the seek operation has finished.
@@ -169,7 +182,7 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
                      customData:(id)customData;
 
 /**
- * Sets the stream volume. Asserts if there is no current media session.
+ * Sets the stream volume. Request will fail if there is no current media status.
  *
  * @param volume The new volume, in the range [0.0 - 1.0].
  * @return The request ID, or kGCKInvalidRequestID if the message could not be sent.
@@ -177,7 +190,7 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
 - (NSInteger)setStreamVolume:(float)volume;
 
 /**
- * Sets the stream volume. Asserts if there is no current media session.
+ * Sets the stream volume. Request will fail if there is no current media status.
  *
  * @param volume The new volume, in the range [0.0 - 1.0].
  * @param customData Custom application-specific data to pass along with the request.
@@ -186,7 +199,7 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
 - (NSInteger)setStreamVolume:(float)volume customData:(id)customData;
 
 /**
- * Sets whether the stream is muted. Asserts if there is no current media session.
+ * Sets whether the stream is muted. Request will fail if there is no current media status.
  *
  * @param muted Whether the stream should be muted or unmuted.
  * @return The request ID, or kGCKInvalidRequestID if the message could not be sent.
@@ -194,7 +207,7 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
 - (NSInteger)setStreamMuted:(BOOL)muted;
 
 /**
- * Sets whether the stream is muted. Asserts if there is no current media session.
+ * Sets whether the stream is muted. Request will fail if there is no current media status.
  *
  * @param muted Whether the stream should be muted or unmuted.
  * @param customData Custom application-specific data to pass along with the request.
@@ -205,7 +218,6 @@ typedef NS_ENUM(NSInteger, GCKMediaControlChannelResumeState) {
 
 /**
  * Requests updated media status information from the receiver.
- * Asserts if there is no current media session.
  *
  * @return The request ID, or kGCKInvalidRequestID if the message could not be sent.
  */

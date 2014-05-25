@@ -8,6 +8,8 @@
 
 #import "Settings.h"
 
+#import <GoogleCast/GoogleCast.h>
+
 #import "SharedDeviceManager.h"
 
 @interface Settings () <UITextFieldDelegate, GCKDeviceScannerListener, SDMDelegate>
@@ -61,8 +63,10 @@
   [self initDeviceScanner];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
   [super viewWillAppear:animated];
+  
+  [self.SDM setDelegate:self];
   
   if(self.SDM.gck_deviceManager) {
     self.gck_selectedDevice = self.SDM.gck_selectedDevice;
@@ -73,9 +77,10 @@
   [self performSelector:@selector(stopScan) withObject:nil afterDelay:15];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)viewDidDisappear:(BOOL)animated {
   [super viewWillDisappear:animated];
   
+  [self.SDM setDelegate:nil];
   [self.gck_deviceScanner removeListener:self];
   [self.gck_deviceScanner stopScan];
 }
@@ -278,7 +283,6 @@
 
 - (void)initSDM {
   self.SDM = [SharedDeviceManager sharedDeviceManager];
-  [self.SDM setDelegate:self];
 }
 
 - (void)initDeviceScanner {

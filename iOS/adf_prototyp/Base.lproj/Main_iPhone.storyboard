@@ -222,6 +222,9 @@
                                 <state key="normal" title="DOWN">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="downButtonAction:" destination="og2-w9-APo" eventType="touchUpInside" id="kEu-8L-b68"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="njh-3B-Vn2">
                                 <rect key="frame" x="75" y="171" width="170" height="72"/>
@@ -231,6 +234,9 @@
                                 <state key="normal" title="UP">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="upButtonAction:" destination="og2-w9-APo" eventType="touchUpInside" id="mx1-N9-ST0"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bPc-yS-8E2">
                                 <rect key="frame" x="20" y="529" width="42" height="30"/>
@@ -247,6 +253,10 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="eqq-tx-6Sx"/>
+                    <connections>
+                        <outlet property="downButton" destination="j0v-Pw-yVG" id="mKf-NB-7hy"/>
+                        <outlet property="upButton" destination="njh-3B-Vn2" id="Y5R-BJ-KpK"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QYJ-OH-2qL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -13,6 +13,7 @@
 		266703B71916F12600BD382E /* Game.m in Sources */ = {isa = PBXBuildFile; fileRef = 266703B61916F12600BD382E /* Game.m */; };
 		26B1ABFB1913EABC00D6F045 /* GoogleCast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26B1ABFA1913EABC00D6F045 /* GoogleCast.framework */; };
 		26B1ABFF19141F3F00D6F045 /* MovementChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 26B1ABFE19141F3F00D6F045 /* MovementChannel.m */; };
+		26B6159419328ECA00534442 /* GoogleCast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26B6159319328ECA00534442 /* GoogleCast.framework */; };
 		973FB7751913B4E500C4CD6E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973FB7741913B4E400C4CD6E /* Foundation.framework */; };
 		973FB7771913B4E500C4CD6E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973FB7761913B4E500C4CD6E /* CoreGraphics.framework */; };
 		973FB7791913B4E500C4CD6E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973FB7781913B4E500C4CD6E /* UIKit.framework */; };
@@ -37,7 +38,6 @@
 		973FB7EB1913B70F00C4CD6E /* cast_on0@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 973FB7BB1913B70F00C4CD6E /* cast_on0@2x.png */; };
 		973FB7EC1913B70F00C4CD6E /* cast_on1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 973FB7BC1913B70F00C4CD6E /* cast_on1@2x.png */; };
 		973FB7ED1913B70F00C4CD6E /* cast_on2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 973FB7BD1913B70F00C4CD6E /* cast_on2@2x.png */; };
-		97F970EC1913B7C200E75985 /* GoogleCast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97F970EB1913B7B700E75985 /* GoogleCast.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +62,7 @@
 		26B1ABFA1913EABC00D6F045 /* GoogleCast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleCast.framework; sourceTree = "<group>"; };
 		26B1ABFD19141F3F00D6F045 /* MovementChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovementChannel.h; sourceTree = "<group>"; };
 		26B1ABFE19141F3F00D6F045 /* MovementChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovementChannel.m; sourceTree = "<group>"; };
+		26B6159319328ECA00534442 /* GoogleCast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleCast.framework; path = adf_prototyp/ressources/frameworks/GoogleCast.framework; sourceTree = "<group>"; };
 		973FB7711913B4E400C4CD6E /* test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		973FB7741913B4E400C4CD6E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		973FB7761913B4E500C4CD6E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -90,7 +91,6 @@
 		973FB7BB1913B70F00C4CD6E /* cast_on0@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cast_on0@2x.png"; sourceTree = "<group>"; };
 		973FB7BC1913B70F00C4CD6E /* cast_on1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cast_on1@2x.png"; sourceTree = "<group>"; };
 		973FB7BD1913B70F00C4CD6E /* cast_on2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cast_on2@2x.png"; sourceTree = "<group>"; };
-		97F970EB1913B7B700E75985 /* GoogleCast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleCast.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,10 +98,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				97F970EC1913B7C200E75985 /* GoogleCast.framework in Frameworks */,
 				973FB7771913B4E500C4CD6E /* CoreGraphics.framework in Frameworks */,
 				973FB7791913B4E500C4CD6E /* UIKit.framework in Frameworks */,
 				26B1ABFB1913EABC00D6F045 /* GoogleCast.framework in Frameworks */,
+				26B6159419328ECA00534442 /* GoogleCast.framework in Frameworks */,
 				973FB7751913B4E500C4CD6E /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -159,7 +159,7 @@
 		973FB7731913B4E400C4CD6E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				97F970EA1913B7B700E75985 /* frameworks */,
+				26B6159319328ECA00534442 /* GoogleCast.framework */,
 				973FB7741913B4E400C4CD6E /* Foundation.framework */,
 				973FB7761913B4E500C4CD6E /* CoreGraphics.framework */,
 				973FB7781913B4E500C4CD6E /* UIKit.framework */,
@@ -316,15 +316,6 @@
 				973FB7891913B4E500C4CD6E /* Main_iPad.storyboard */,
 			);
 			name = Storyboard;
-			sourceTree = "<group>";
-		};
-		97F970EA1913B7B700E75985 /* frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				97F970EB1913B7B700E75985 /* GoogleCast.framework */,
-			);
-			name = frameworks;
-			path = adf_prototyp/ressources/frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

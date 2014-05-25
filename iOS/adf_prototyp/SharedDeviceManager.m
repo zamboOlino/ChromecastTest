@@ -16,12 +16,10 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 + (SharedDeviceManager *)sharedDeviceManager {
   static SharedDeviceManager *sharedDeviceManagerInstance = nil;
-  static dispatch_once_t oncePredicate;
+  static dispatch_once_t predicate;
   
-  dispatch_once(&oncePredicate, ^{
-    //if(sharedDeviceManagerInstance == nil) {
+  dispatch_once(&predicate, ^{
     sharedDeviceManagerInstance = [[self alloc] init];
-    //}
   });
   
   return sharedDeviceManagerInstance;
@@ -29,8 +27,9 @@ static NSString *const kReceiverAppID = @"5A71905F";
 
 - (id)init {
   if(self = [super init]) {
-    // your custom initialization
+    
   }
+  
   return self;
 }
 

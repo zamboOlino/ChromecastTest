@@ -60,15 +60,4 @@ typedef NS_ENUM(NSInteger, GCKMediaStreamType) {
          streamDuration:(NSTimeInterval)streamDuration
              customData:(id)customData;
 
-/** @cond INTERNAL */
-
-- (id)initWithJSONObject:(id)JSONObject;
-
-/**
- * Create a JSON object which can serialized with NSJSONSerialization to pass to the receiver.
- */
-- (id)JSONObject;
-
-/** @endcond */
-
 @end

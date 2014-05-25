@@ -104,7 +104,7 @@
  *
  * @param applicationID The application ID.
  * @param relaunchIfRunning If YES, relaunches the application if it is already running instead of
- * joining the running applicaiton.
+ * joining the running application.
  * @return NO if the message could not be sent.
  */
 - (BOOL)launchApplication:(NSString *)applicationID

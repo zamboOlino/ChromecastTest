@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <GoogleCast/GoogleCast.h>
 
 @protocol SDMDelegate
 
@@ -34,8 +35,8 @@
 @property (strong, nonatomic) GCKDevice *gck_selectedDevice;
 @property (weak, nonatomic) id delegate;
 
-+ (SharedDeviceManager *)sharedDeviceManager;
-
 - (void)initDeviceManager:(GCKDevice *)device;
+
++ (SharedDeviceManager *)sharedDeviceManager;
 
 @end

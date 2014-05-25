@@ -8,7 +8,18 @@
 
 #import "Game.h"
 
-@interface Game ()
+#import <GoogleCast/GoogleCast.h>
+
+#import "SharedDeviceManager.h"
+
+@interface Game () <SDMDelegate>
+
+@property (strong, nonatomic) SharedDeviceManager *SDM;
+
+@property (strong, nonatomic) NSUserDefaults *userDefaults;
+
+@property (weak, nonatomic) IBOutlet UIButton *upButton;
+@property (weak, nonatomic) IBOutlet UIButton *downButton;
 
 @end
 
@@ -25,8 +36,23 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
+  [super viewDidLoad];
+  
+  self.userDefaults = [NSUserDefaults standardUserDefaults];
+  
+  [self initSDM];
+  [self initViewComponents];
+  [self initChannel];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+  [super viewDidAppear:animated];
+  
+  [self.SDM setDelegate:self];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+  [self.SDM setDelegate:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -35,22 +61,41 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - FUNCTIONS
+
+- (BOOL)isConnected {
+  return self.SDM.gck_deviceManager.isConnected;
+}
+
+- (void)initSDM {
+  self.SDM = [SharedDeviceManager sharedDeviceManager];
+}
+
+- (void)initViewComponents {
+  [self.upButton.layer setCornerRadius:20];
+  [self.downButton.layer setCornerRadius:20];
+}
+
+- (void)initChannel {
+  self.castChannel = [[MovementChannel alloc] initWithNamespace:@"urn:x-cast:de.adf.chromecast.pong"];
+  [self.SDM.gck_deviceManager addChannel:self.castChannel];
+}
+
 #pragma mark - UIButton Actions
 
 - (IBAction)backButton:(id)sender {
+  [self.SDM.gck_deviceManager stopApplication];
+  
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (IBAction)upButtonAction:(id)sender {
+  [self.castChannel sendTextMessage:@"1"];
 }
-*/
+
+- (IBAction)downButtonAction:(id)sender {
+  [self.castChannel sendTextMessage:@"2"];
+}
 
 @end

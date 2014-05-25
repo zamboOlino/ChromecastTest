@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import <GoogleCast/GoogleCast.h>
+
 @interface MovementChannel : GCKCastChannel
 
 @end

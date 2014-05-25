@@ -2,6 +2,14 @@
 
 #import <Foundation/Foundation.h>
 
+/** @file GCKError.h
+ *  @brief Error codes
+ */
+
+/**
+ * @enum GCKErrorCode
+ * @brief Description of error codes
+ */
 typedef NS_ENUM(NSInteger, GCKErrorCode) {
 
   /**

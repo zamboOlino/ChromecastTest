@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+//CHANNEL
+#import "MovementChannel.h"
 
 @interface Game : UIViewController
+
+//CHANNEL
+@property (strong, nonatomic) MovementChannel *castChannel;
 
 @end
