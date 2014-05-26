@@ -36,7 +36,10 @@ static NSString *const kReceiverAppID = @"BCA73134"; //PONG
 
 @property (weak, nonatomic) IBOutlet UIButton *gameButton;
 @property (weak, nonatomic) IBOutlet UIButton *joinButton;
+@property (weak, nonatomic) IBOutlet UIButton *resumeButton;
 
+@property (weak, nonatomic) IBOutlet UILabel *gameStatus;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *statusIndicator;
 //CHANNEL
 //@property MessageChannel *messageChannel;
 
@@ -46,7 +49,7 @@ static NSString *const kReceiverAppID = @"BCA73134"; //PONG
 
 @synthesize SDM, gck_deviceManager, gck_selectedDevice, gck_applicationMetadata, gck_deviceScanner, gck_sessionID;
 @synthesize userDefaults, reconnectApp, connectingApp;
-@synthesize gameButton, joinButton;
+@synthesize gameButton, joinButton, resumeButton, gameStatus, statusIndicator;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -87,6 +90,13 @@ static NSString *const kReceiverAppID = @"BCA73134"; //PONG
   if(![self isConnected]) {
     [self performSegueWithIdentifier:@"SettingsSegue" sender:self];
   }
+  
+  if([self isConnectedToApp]) {
+    [self.statusIndicator stopAnimating];
+    [self.gameStatus setText:@"Game is in progress..."];
+  } else {
+    [self.gameStatus setText:@"Choose game Mode..."];
+  }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -108,6 +118,9 @@ static NSString *const kReceiverAppID = @"BCA73134"; //PONG
     [alert show];
 
   } else {
+    [self.statusIndicator startAnimating];
+    [self.gameStatus setText:@"Starting new game..."];
+    
     self.connectingApp = YES;
     
     [self.SDM.gck_deviceManager launchApplication:kReceiverAppID];
@@ -126,11 +139,31 @@ static NSString *const kReceiverAppID = @"BCA73134"; //PONG
     
     [alert show];
   } else {
+    [self.statusIndicator startAnimating];
+    [self.gameStatus setText:@"Starting new game..."];
+    
     self.connectingApp = YES;
     
     [self.SDM.gck_deviceManager joinApplication:kReceiverAppID];
   }
 }
+
+- (IBAction)resumeButton:(id)sender {
+  if(![self isConnected]) {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No device"
+                                                    message:@"Please connect to an chromecast device"
+                                                   delegate:self
+                                          cancelButtonTitle:@"connect"
+                                          otherButtonTitles:nil];
+    
+    alert.tag = 2;
+    
+    [alert show];
+  } else {
+    [self performSegueWithIdentifier:@"GameSegue" sender:self];
+  }
+}
+
 
 #pragma mark - UIAlertView Delegate
 
@@ -150,6 +183,10 @@ static NSString *const kReceiverAppID = @"BCA73134"; //PONG
 
 - (BOOL)isConnected {
   return self.SDM.gck_deviceManager.isConnected;
+}
+
+- (BOOL)isConnectedToApp {
+  return self.SDM.gck_deviceManager.isConnectedToApp;
 }
 
 - (void)initSDM {
@@ -181,6 +218,9 @@ static NSString *const kReceiverAppID = @"BCA73134"; //PONG
   self.connectingApp = NO;
 
   if(error != NULL) {
+    [self.statusIndicator stopAnimating];
+    [self.gameStatus setText:@"Disconnect from game failed..."];
+    
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Application"
                                                     message:@"Can't disconnect from application"
                                                    delegate:self
@@ -198,6 +238,9 @@ static NSString *const kReceiverAppID = @"BCA73134"; //PONG
   self.connectingApp = NO;
 
   if(error != NULL) {
+    [self.statusIndicator stopAnimating];
+    [self.gameStatus setText:@"Starting game failed..."];
+    
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Application"
                                                     message:@"Can't connect to application"
                                                    delegate:self
@@ -211,6 +254,9 @@ static NSString *const kReceiverAppID = @"BCA73134"; //PONG
 }
 
 - (void)dm:(GCKDeviceManager *)dm failToStopApp:(NSError *)error {
+  [self.statusIndicator stopAnimating];
+  [self.gameStatus setText:@"Stopping game failed..."];
+  
   NSLog(@"failToStopApp");
   self.connectingApp = NO;
 

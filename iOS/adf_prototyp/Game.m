@@ -91,11 +91,11 @@
 
 
 - (IBAction)upButtonAction:(id)sender {
-  [self.castChannel sendTextMessage:@"1"];
+  [self.castChannel sendTextMessage:@"5"];
 }
 
 - (IBAction)downButtonAction:(id)sender {
-  [self.castChannel sendTextMessage:@"2"];
+  [self.castChannel sendTextMessage:@"-5"];
 }
 
 @end

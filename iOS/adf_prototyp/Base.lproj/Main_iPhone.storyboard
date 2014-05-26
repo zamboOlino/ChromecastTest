@@ -157,7 +157,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w1k-dn-IHV">
-                                <rect key="frame" x="60" y="127" width="200" height="88"/>
+                                <rect key="frame" x="50" y="112" width="220" height="88"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.20392156859999999" green="0.4941176471" blue="0.63137254899999995" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="35"/>
@@ -170,7 +170,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="miV-Oa-XmH">
-                                <rect key="frame" x="60" y="288" width="200" height="88"/>
+                                <rect key="frame" x="50" y="208" width="220" height="88"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.20392156859999999" green="0.4941176471" blue="0.63137254899999995" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="35"/>
@@ -180,6 +180,32 @@
                                 </state>
                                 <connections>
                                     <action selector="joinButton:" destination="d3Y-gL-bDl" eventType="touchUpInside" id="ejd-xQ-tWY"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Choose game mode.." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cim-eM-FtB">
+                                <rect key="frame" x="20" y="4" width="280" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                <color key="textColor" red="0.20392156859999999" green="0.4941176471" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="lmi-Ot-dmx">
+                                <rect key="frame" x="150" y="24" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" red="0.20392156859999999" green="0.4941176471" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="color" red="0.20392156859999999" green="0.4941176471" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vVp-Ls-gf5">
+                                <rect key="frame" x="50" y="304" width="220" height="88"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.20392156859999999" green="0.4941176471" blue="0.63137254899999995" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="35"/>
+                                <state key="normal" title="resume game">
+                                    <color key="titleColor" red="0.20392156859999999" green="0.4941176471" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="resumeButton:" destination="d3Y-gL-bDl" eventType="touchUpInside" id="RBB-W6-aVC"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -194,7 +220,10 @@
                     </navigationItem>
                     <connections>
                         <outlet property="gameButton" destination="w1k-dn-IHV" id="82O-0R-05u"/>
+                        <outlet property="gameStatus" destination="Cim-eM-FtB" id="W1y-6A-sL6"/>
                         <outlet property="joinButton" destination="miV-Oa-XmH" id="7Ha-cW-kGc"/>
+                        <outlet property="resumeButton" destination="vVp-Ls-gf5" id="hu6-RS-sJs"/>
+                        <outlet property="statusIndicator" destination="lmi-Ot-dmx" id="kcX-8O-ry0"/>
                         <segue destination="og2-w9-APo" kind="modal" identifier="GameSegue" id="nHF-JY-Owo"/>
                     </connections>
                 </viewController>
@@ -215,11 +244,11 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j0v-Pw-yVG">
-                                <rect key="frame" x="75" y="325" width="170" height="72"/>
+                                <rect key="frame" x="170" y="248" width="130" height="72"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.20392156859999999" green="0.4941176471" blue="0.63137254899999995" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="50"/>
-                                <state key="normal" title="DOWN">
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
+                                <state key="normal" title="RIGHT">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -227,11 +256,11 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="njh-3B-Vn2">
-                                <rect key="frame" x="75" y="171" width="170" height="72"/>
+                                <rect key="frame" x="20" y="248" width="130" height="72"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.20392156859999999" green="0.4941176471" blue="0.63137254899999995" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="50"/>
-                                <state key="normal" title="UP">
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
+                                <state key="normal" title="LEFT">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
